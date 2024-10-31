@@ -17,7 +17,7 @@ Make sure you have the [Substreams CLI installed](https://substreams.streamingfa
 
 ```
 KEY_NAME=ethereum-explorer
-API_KEY=server_9f18367d9d139ac4c25c15064465c40f
+API_KEY=server_
 export SUBSTREAMS_API_TOKEN=<authentication-token>
 ```
 
@@ -37,6 +37,47 @@ substreams gui \
 ```
 
 - Verify that the Substreams runs without errors, confirming that your authentication is successful.
+
+## Running the Substreams
+
+> Running a Substreams usually requires three steps: </br>
+> generating the Rust Protobufs, building the WASM container, and using the Substream CLI to start the streaming.
+
+### Generating Protobuf objects
+
+The .proto files define a data model regardless of any programming language. However, in order to use this model in your Rust application, you must generate the corresponding Rust data structures.
+
+> Note that running make protogen is only necessary when making updates to any file in the proto folder.
+
+```
+make protogen
+```
+
+### Building the WASM module
+
+`make build` command generates a WASM container from the Rust application, which you can find at /target/wasm32-unknown-unknown/release/substreams.wasm.
+
+> Note that this is the same path provided in the Substreams manifest (substreams.yml).
+
+```
+make build
+```
+
+### Streaming data through the CLI
+
+The following command streams the Ethereum blockchain data, and applies the transformations contained in the map_block_meta module to every block.
+
+```
+substreams run -e mainnet.eth.streamingfast.io:443 substreams.yaml map_block_meta --start-block 17712040 --stop-block +1
+```
+
+Let's break down the command into pieces:
+
+- `mainnet.eth.streamingfast.io:443` is the StreamingFast Ethereum Mainnet endpoint where you are sending your Substreams for execution.
+- `substreams.yaml` specifies the Substreams manifest.
+- `map_block_meta:` specifies the module to execute. Since the Ethereum Explorer application contains several modules, it is necessary to specify which one you want to execute.
+- `--start-block 17712040` specifies the starting block (i.e. the block where Substreams will start streaming).
+- `--stop-block +1` specifies how many blocks after the starting block should be considered. In this example, +1 means that the streaming will start at 17712040 and finish at 17712041 (just one block).
 
 ## Modules
 
@@ -61,20 +102,6 @@ Given a smart contract address parameter (`contract_address`), the `map_contract
 1. Iterating over all the smart contract transactions,
 2. Filtering the transactions, where the `to` field is equal to the smart contract address parameter (`to == contract_address`).
 3. For every filtered transaction, retrieve the logs.
-
-## Running the Substreams
-
-First, generate the Protobuf code, which are the outputs of the Substreams:
-
-```
-> make protogen
-```
-
-Then, build the Rust code using the `cargo` command-line tool:
-
-```
-> make build
-```
 
 Now, you are ready to run the Substreams. The Substreams contained in this project are independent of each other, so you must specify which Substreams module you want to run.
 
