@@ -202,6 +202,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "ethereum-explorer"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "ethabi",
+ "getrandom",
+ "hex-literal",
+ "num-bigint",
+ "prost",
+ "prost-types",
+ "serde",
+ "serde_qs",
+ "substreams",
+ "substreams-ethereum",
+]
+
+[[package]]
 name = "ethereum-types"
 version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -861,23 +878,6 @@ dependencies = [
  "quote",
  "substreams-ethereum-abigen",
  "syn 1.0.109",
-]
-
-[[package]]
-name = "substreams-ethereum-explorer"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "ethabi",
- "getrandom",
- "hex-literal",
- "num-bigint",
- "prost",
- "prost-types",
- "serde",
- "serde_qs",
- "substreams",
- "substreams-ethereum",
 ]
 
 [[package]]
